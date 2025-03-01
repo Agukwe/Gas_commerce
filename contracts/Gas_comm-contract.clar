@@ -24,3 +24,14 @@
       (map-set gas-balances { user: tx-sender } { balance: (- (get balance balance) amount) })
       (emit-event gas-withdrawn tx-sender amount)
       (ok "Gas withdrawn successfully"))))
+(define-public (transfer-ownership (new-owner principal))
+  (begin
+    (only-owner)
+    (define-constant CONTRACT-OWNER new-owner)
+    (ok "Ownership transferred successfully")))
+
+(define-read-only (gas-type-exists (gas-type (string-ascii 20)))
+  (is-some (map-get? gas-prices { gas-type: gas-type })))
+
+(define-read-only (list-gas-types)
+  (map-get-keys gas-prices))
